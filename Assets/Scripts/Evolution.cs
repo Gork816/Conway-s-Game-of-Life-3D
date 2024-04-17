@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Evolution : MonoBehaviour
 {
-    int[,,] status = new int[30, 30, 30];
+    public bool[,,] status = new bool[30, 30, 30];
     int[,,] neighbours = new int[30, 30, 30];
     GameObject[,,] cells = new GameObject[30, 30, 30];
 
@@ -15,22 +16,38 @@ public class Evolution : MonoBehaviour
     [SerializeField]
     GameObject cellObj;
 
+    private void CellSwitch(Vector3Int cell)
+    {
+        int x = cell.x;
+        int y = cell.y;
+        int z = cell.z;
+
+        cells[x, y, z].SetActive(status[x, y, z]);
+    }
+
+    private void LayerSwitch(int y)
+    {
+        for (int x = 0; x < 30; x++)
+            for (int z = 0; z < 30; z++)
+                CellSwitch(new Vector3Int(x, y, z));
+    }
+
     private void CellStatusUpdate(Vector3Int cell)
     {
         int x = cell.x;
         int y = cell.y;
         int z = cell.z;
 
-        if ((neighbours[x, y, z] == 5) || (neighbours[x, y, z] == 4 && status[x, y, z] == 1))
+        if ((neighbours[x, y, z] == 5) || (neighbours[x, y, z] == 4 && status[x, y, z]))
         {
-            status[x, y, z] = 1;
-            cells[x, y, z].SetActive(true);
+            status[x, y, z] = true;
             alive.Add(cell);
         } else
         {
-            status[x, y, z] = 0;
-            cells[x, y, z].SetActive(false);
+            status[x, y, z] = false;
         }
+
+        CellSwitch(cell);
     }
 
     private void StatusUpdate()
@@ -81,9 +98,9 @@ public class Evolution : MonoBehaviour
             for (int y = 0; y < 30; y++)
                 for (int z = 0; z < 30; z++)
                 {
-                    status[x, y, z] = 0;
                     neighbours[x, y, z] = 0;
                     cells[x, y, z] = Instantiate(cellObj, new Vector3(x, y, z), Quaternion.identity);
+                    cells[x, y, z].SetActive(status[x, y, z]);
                 }
     }
 }
