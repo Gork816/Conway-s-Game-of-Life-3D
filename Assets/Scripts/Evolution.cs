@@ -16,20 +16,13 @@ public class Evolution : MonoBehaviour
     [SerializeField]
     GameObject cellObj;
 
-    private void CellSwitch(Vector3Int cell)
+    public void CellSwitch(Vector3Int cell)
     {
         int x = cell.x;
         int y = cell.y;
         int z = cell.z;
 
         cells[x, y, z].SetActive(status[x, y, z]);
-    }
-
-    private void LayerSwitch(int y)
-    {
-        for (int x = 0; x < 30; x++)
-            for (int z = 0; z < 30; z++)
-                CellSwitch(new Vector3Int(x, y, z));
     }
 
     private void CellStatusUpdate(Vector3Int cell)

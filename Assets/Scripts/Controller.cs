@@ -6,8 +6,11 @@ using UnityEngine;
 public class Controller : MonoBehaviour
 {
     bool isPaused = true;
+    bool cameraOn = false;
 
     Evolution evo;
+    [SerializeField]
+    CameraControl cam;
 
     private void Start()
     {
@@ -24,15 +27,21 @@ public class Controller : MonoBehaviour
         }
     }
 
-    void Pause()
+    public void Pause()
     {
         StopCoroutine(Tick());
         isPaused = true;
     }
 
-    void Resume()
+    public void Resume()
     {
         StartCoroutine(Tick());
         isPaused = false;
+    }
+
+    public void ChangeCameraState()
+    {
+        cameraOn = !cameraOn;
+        cam.enabled = cameraOn;
     }
 }

@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class PatternEditor : MonoBehaviour
 {
@@ -11,11 +13,18 @@ public class PatternEditor : MonoBehaviour
     GameObject uiCell;
     [SerializeField]
     GameObject frame;
+    [SerializeField]
+    GameObject window;
 
     int curY = 0;
 
     [SerializeField]
+    TextMeshProUGUI textbox;
+
+    [SerializeField]
     Evolution evo;
+    [SerializeField]
+    Controller ctrl;
 
     private void Start()
     {
@@ -25,11 +34,10 @@ public class PatternEditor : MonoBehaviour
                 GameObject newCell = Instantiate(uiCell, frame.transform);
                 RectTransform rectTransform = newCell.GetComponent<RectTransform>();
                 rectTransform.anchoredPosition = new Vector2(5 + 10 * x, 5 + 10 * z);
-                UIcells[x, z] = GetComponent<UICell>();
+                UIcells[x, z] = newCell.GetComponent<UICell>();
             }
 
-        //GetLayer(curY);
-        StartTimer();
+        GetLayer(curY);
     }
 
     private void GetLayer(int y)
@@ -38,6 +46,7 @@ public class PatternEditor : MonoBehaviour
             for (int z = 0; z < 30; z++)
             {
                 UIcells[x, z].status = evo.status[x, y, z];
+                UIcells[x, z].ChangeColor();
             }
     }
 
@@ -47,6 +56,7 @@ public class PatternEditor : MonoBehaviour
             for (int z = 0; z < 30; z++)
             {
                 evo.status[x, y, z] = UIcells[x, z].status;
+                evo.CellSwitch(new Vector3Int(x, y, z));
             }
     }
 
@@ -57,12 +67,14 @@ public class PatternEditor : MonoBehaviour
             SendLayer(curY);
             curY += dy;
             GetLayer(curY);
+            textbox.text = "y = " + curY.ToString();
         }
     }
-
-    IEnumerator StartTimer()
+    
+    public void CloseEditor()
     {
-        yield return new WaitForSeconds(1f);
-        GetLayer(curY);
+        SendLayer(curY);
+        ctrl.ChangeCameraState();
+        window.SetActive(false);
     }
 }
