@@ -92,7 +92,7 @@ public class Evolution : MonoBehaviour
                     neighbours[x, y, z] = 0;
     }
 
-    private void Start()
+    private void Awake()
     {
         for (int x = 0; x < 30; x++)
             for (int y = 0; y < 30; y++)

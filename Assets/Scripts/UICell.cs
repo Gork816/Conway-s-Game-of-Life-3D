@@ -12,6 +12,11 @@ public class UICell : MonoBehaviour
     public void Click()
     {
         status = !status;
+        ChangeColor(status);
+    }
+
+    public void ChangeColor(bool status)
+    {
         if (status)
             img.color = Color.white;
         else
