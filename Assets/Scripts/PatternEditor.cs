@@ -75,6 +75,7 @@ public class PatternEditor : MonoBehaviour
     {
         SendLayer(curY);
         ctrl.ChangeCameraState();
+        evo.RefreshAlive();
         window.SetActive(false);
     }
 }

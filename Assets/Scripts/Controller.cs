@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Controller : MonoBehaviour
 {
@@ -12,6 +13,14 @@ public class Controller : MonoBehaviour
     [SerializeField]
     CameraControl cam;
 
+    [SerializeField]
+    GameObject pauseBtn;
+
+    [SerializeField]
+    Sprite pauseSpr;
+    [SerializeField]
+    Sprite resumeSpr;
+
     private void Start()
     {
         evo = GetComponent<Evolution>();
@@ -21,22 +30,24 @@ public class Controller : MonoBehaviour
     {
         if (!isPaused)
         {
-            yield return new WaitForSeconds(1f);
             evo.Turn();
-            Tick();
+            yield return new WaitForSeconds(0.5f);
+            StartCoroutine(Tick());
         }
     }
 
-    public void Pause()
+    public void PauseResume()
     {
-        StopCoroutine(Tick());
-        isPaused = true;
-    }
-
-    public void Resume()
-    {
-        StartCoroutine(Tick());
-        isPaused = false;
+        isPaused = !isPaused;
+        if (isPaused)
+        {
+            StopCoroutine(Tick());
+            pauseBtn.GetComponent<Image>().sprite = resumeSpr;
+        } else
+        {
+            StartCoroutine(Tick());
+            pauseBtn.GetComponent<Image>().sprite = pauseSpr;
+        }
     }
 
     public void ChangeCameraState()

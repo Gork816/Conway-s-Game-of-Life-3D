@@ -16,6 +16,14 @@ public class Evolution : MonoBehaviour
     [SerializeField]
     GameObject cellObj;
 
+    int Idx(int arg)
+    {
+        if (arg >= 0)
+            return (arg % 30);
+        else
+            return (30 + arg);
+    }
+
     public void CellSwitch(Vector3Int cell)
     {
         int x = cell.x;
@@ -62,8 +70,8 @@ public class Evolution : MonoBehaviour
         for (int dx = -1; dx <= 1; dx++)
             for (int dy = -1; dy <= 1; dy++)
                 for (int dz = -1; dz <= 1; dz++) {
-                    neighbours[(x + dx) % 30, (y + dy) % 30, (z + dz) % 30] += 1;
-                    active.Add(new Vector3Int(x + dx, y + dy, z + dz));
+                    neighbours[Idx(x + dx), Idx(y + dy), Idx(z + dz)] += 1;
+                    active.Add(new Vector3Int(Idx(x + dx), Idx(y + dy), Idx(z + dz)));
                 }
     }
 
@@ -83,6 +91,16 @@ public class Evolution : MonoBehaviour
             for (int y = 0; y < 30; y++)
                 for (int z = 0; z < 30; z++)
                     neighbours[x, y, z] = 0;
+    }
+
+    public void RefreshAlive()
+    {
+        alive.Clear();
+        for (int x = 0; x < 30; x++)
+            for (int y = 0; y < 30; y++)
+                for (int z = 0; z < 30; z++)
+                    if (status[x, y, z])
+                        alive.Add(new Vector3Int(x, y, z));
     }
 
     private void Awake()
