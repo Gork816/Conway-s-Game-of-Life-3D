@@ -26,6 +26,9 @@ public class PatternEditor : MonoBehaviour
     [SerializeField]
     Controller ctrl;
 
+    [SerializeField]
+    GameObject editBtn;
+
     private void Start()
     {
         for (int x = 0; x < 30; x++)
@@ -75,7 +78,14 @@ public class PatternEditor : MonoBehaviour
     {
         SendLayer(curY);
         ctrl.ChangeCameraState();
+        ctrl.pauseBtn.SetActive(true);
         evo.RefreshAlive();
+        editBtn.SetActive(true);
         window.SetActive(false);
+    }
+
+    public void EditorOn()
+    {
+        GetLayer(curY);
     }
 }

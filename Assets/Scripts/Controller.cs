@@ -12,14 +12,21 @@ public class Controller : MonoBehaviour
     Evolution evo;
     [SerializeField]
     CameraControl cam;
+    [SerializeField]
+    PatternEditor edit;
 
     [SerializeField]
-    GameObject pauseBtn;
+    public GameObject pauseBtn;
+    [SerializeField]
+    GameObject editBtn;
 
     [SerializeField]
     Sprite pauseSpr;
     [SerializeField]
     Sprite resumeSpr;
+
+    [SerializeField]
+    GameObject editWin;
 
     private void Start()
     {
@@ -43,10 +50,12 @@ public class Controller : MonoBehaviour
         {
             StopCoroutine(Tick());
             pauseBtn.GetComponent<Image>().sprite = resumeSpr;
+            editBtn.SetActive(true);
         } else
         {
             StartCoroutine(Tick());
             pauseBtn.GetComponent<Image>().sprite = pauseSpr;
+            editBtn.SetActive(false);
         }
     }
 
@@ -54,5 +63,14 @@ public class Controller : MonoBehaviour
     {
         cameraOn = !cameraOn;
         cam.enabled = cameraOn;
+    }
+
+    public void OpenEditor()
+    {
+        editBtn.SetActive(false);
+        editWin.SetActive(true);
+        pauseBtn.SetActive(false);
+        edit.EditorOn();
+        ChangeCameraState();
     }
 }
