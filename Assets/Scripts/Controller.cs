@@ -15,10 +15,7 @@ public class Controller : MonoBehaviour
     [SerializeField]
     PatternEditor edit;
 
-    [SerializeField]
-    public GameObject pauseBtn;
-    [SerializeField]
-    GameObject editBtn;
+    public GameObject[] buttons = new GameObject[3];
 
     [SerializeField]
     Sprite pauseSpr;
@@ -27,6 +24,8 @@ public class Controller : MonoBehaviour
 
     [SerializeField]
     GameObject editWin;
+    [SerializeField]
+    GameObject rulesWin;
 
     private void Start()
     {
@@ -49,13 +48,15 @@ public class Controller : MonoBehaviour
         if (isPaused)
         {
             StopCoroutine(Tick());
-            pauseBtn.GetComponent<Image>().sprite = resumeSpr;
-            editBtn.SetActive(true);
+            buttons[0].GetComponent<Image>().sprite = resumeSpr;
+            for (int i = 1; i < buttons.Length; i++)
+                buttons[i].SetActive(true);
         } else
         {
             StartCoroutine(Tick());
-            pauseBtn.GetComponent<Image>().sprite = pauseSpr;
-            editBtn.SetActive(false);
+            buttons[0].GetComponent<Image>().sprite = pauseSpr;
+            for (int i = 1; i < buttons.Length; i++)
+                buttons[i].SetActive(false);
         }
     }
 
@@ -67,10 +68,23 @@ public class Controller : MonoBehaviour
 
     public void OpenEditor()
     {
-        editBtn.SetActive(false);
         editWin.SetActive(true);
-        pauseBtn.SetActive(false);
         edit.EditorOn();
         ChangeCameraState();
+        foreach (var btn in buttons)
+            btn.SetActive(false);
+    }
+
+    public void OpenRules()
+    {
+        rulesWin.SetActive(true);
+        ChangeCameraState();
+        foreach (var btn in buttons)
+            btn.SetActive(false);
+    }
+
+    public void GameQuit()
+    {
+        Application.Quit();
     }
 }

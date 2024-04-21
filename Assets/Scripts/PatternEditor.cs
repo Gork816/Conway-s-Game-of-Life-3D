@@ -4,6 +4,7 @@ using TMPro;
 using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class PatternEditor : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class PatternEditor : MonoBehaviour
     [SerializeField]
     GameObject window;
 
-    int curY = 0;
+    public int curY = 0;
 
     [SerializeField]
     TextMeshProUGUI textbox;
@@ -25,9 +26,6 @@ public class PatternEditor : MonoBehaviour
     Evolution evo;
     [SerializeField]
     Controller ctrl;
-
-    [SerializeField]
-    GameObject editBtn;
 
     private void Start()
     {
@@ -53,7 +51,7 @@ public class PatternEditor : MonoBehaviour
             }
     }
 
-    private void SendLayer(int y)
+    public void SendLayer(int y)
     {
         for (int x = 0; x < 30; x++)
             for (int z = 0; z < 30; z++)
@@ -78,10 +76,10 @@ public class PatternEditor : MonoBehaviour
     {
         SendLayer(curY);
         ctrl.ChangeCameraState();
-        ctrl.pauseBtn.SetActive(true);
         evo.RefreshAlive();
-        editBtn.SetActive(true);
         window.SetActive(false);
+        foreach (var btn in ctrl.buttons)
+            btn.SetActive(true);
     }
 
     public void EditorOn()

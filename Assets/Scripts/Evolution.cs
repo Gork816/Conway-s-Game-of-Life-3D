@@ -9,12 +9,17 @@ public class Evolution : MonoBehaviour
     int[,,] neighbours = new int[30, 30, 30];
     GameObject[,,] cells = new GameObject[30, 30, 30];
 
-    HashSet<Vector3Int> alive = new HashSet<Vector3Int>();
+    public HashSet<Vector3Int> alive = new HashSet<Vector3Int>();
     //active cells = alive cells + their neighbours
     HashSet<Vector3Int> active = new HashSet<Vector3Int>();
 
     [SerializeField]
     GameObject cellObj;
+
+    public int sMin = 4;
+    public int sMax = 5;
+    public int bMin = 5;
+    public int bMax = 5;
 
     int Idx(int arg)
     {
@@ -39,7 +44,8 @@ public class Evolution : MonoBehaviour
         int y = cell.y;
         int z = cell.z;
 
-        if ((neighbours[x, y, z] == 5) || (neighbours[x, y, z] == 4 && status[x, y, z]))
+        if (((bMin <= neighbours[x, y, z]) && (neighbours[x, y, z] <= bMax)) ||
+            ((sMin <= neighbours[x, y, z]) && (neighbours[x, y, z] <= sMax) && (status[x, y, z])))
         {
             status[x, y, z] = true;
             alive.Add(cell);
@@ -113,5 +119,18 @@ public class Evolution : MonoBehaviour
                     cells[x, y, z] = Instantiate(cellObj, new Vector3(x, y, z), Quaternion.identity);
                     cells[x, y, z].SetActive(status[x, y, z]);
                 }
+    }
+
+    public void ClearMap()
+    {
+        for (int x = 0; x < 30; x++)
+            for (int y = 0; y < 30; y++)
+                for (int z = 0; z < 30; z++)
+                {
+                    status[x, y, z] = false;
+                    CellSwitch(new Vector3Int(x, y, z));
+                }
+
+        alive.Clear();
     }
 }
